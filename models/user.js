@@ -13,6 +13,10 @@ class User extends Model{
       }
     })
   }
+
+  static async createUser (data) {
+    return await User.createUser(data)
+  }
 }
 
 User.init({

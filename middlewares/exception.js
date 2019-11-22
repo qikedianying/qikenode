@@ -9,7 +9,8 @@ const catchError = async (ctx, next) => {
     if (isHttpException) {
       ctx.body = {
         code: e.code,
-        msg: e.msg
+        msg: e.msg,
+        data: e.data
       }
     }
     // console.log(e.msg, e.errorCode)
