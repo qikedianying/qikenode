@@ -6,6 +6,10 @@ module.exports = {
     user: 'root',
     password: 'zjb2019'
   },
+  security: {
+    secretKey: '123!@#qweQWE',
+    expiresIn: 60 * 60 * 24 *7// 一个小时 * 24 * 7
+  },
   wx: {
     appid: 'wxf19a509c99a12155',
     appSecret: '544189fd7fb962e5d0497ef310df6e2a',

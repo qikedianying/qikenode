@@ -2,9 +2,6 @@ const {Sequelize, Model} = require('sequelize')
 const { db } = require('../core/db')
 
 class User extends Model{
-  static async createUser (data) {
-    return await User.create(data)
-  }
 
   static async getUser (openid) {
     return await User.findOne({
@@ -15,7 +12,15 @@ class User extends Model{
   }
 
   static async createUser (data) {
-    return await User.createUser(data)
+    return await User.create({
+      openid: data.openId,
+      nike_name: data.nickName,
+      face: data.avatarUrl,
+      province: data.province,
+      city: data.city,
+      gender: data.gender,
+      // unionid: data.unionid,
+    })
   }
 }
 
