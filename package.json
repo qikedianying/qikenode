@@ -9,5 +9,8 @@
     "mysql2": "^2.0.0",
     "require-directory": "^2.1.1",
     "sequelize": "^5.21.2"
+  },
+  "devDependencies": {
+    "chalk": "^3.0.0"
   }
 }

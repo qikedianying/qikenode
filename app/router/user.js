@@ -27,13 +27,12 @@ router.post('/login', async (ctx, next) => {
 
   // 获取用户详情
   const user          = await User.getUser(data.openId)
+  // console.log(user)
 
   // 用户不存在 添加用户
   if(!user) {
     await User.createUser(data)
   }
-
-  console.log(data, 222)
 
   // 返回数据
   data.token = generateToken(data.openId)

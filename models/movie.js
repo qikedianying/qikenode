@@ -10,6 +10,15 @@ class Movie extends Model{
       }
     })
   }
+  static async getMovieById(id) {
+    return await Movie.findOne({
+      where: { id }
+    })
+  }
+
+  static async getList() {
+    return await Movie.findAll()
+  }
 }
 
 Movie.init({
@@ -35,8 +44,6 @@ Movie.init({
   sequelize: db,
   modelName: 'movie'
 })
-
-// La leggenda dei piansita sull'oceano
 
 module.exports= {
   Movie
