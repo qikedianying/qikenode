@@ -1,0 +1,15 @@
+{
+    "name": "qike",
+    "script": "app.js",
+    "watch": [
+        "controllers",
+        "models",
+        "app.js",
+        "router.js",
+        "config.js",
+        "Store.js"
+    ],
+    "env": {
+        "NODE_ENV": "development"
+    }
+}

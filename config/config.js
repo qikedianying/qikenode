@@ -1,6 +1,6 @@
-// const env = require('./dev')
-const env = require('./prod')
-
+const dev = require('./dev')
+const prod = require('./prod')
+const env = process.env.NODE_ENV === 'production' ? prod : dev
 module.exports = {
   ...env,
   security: {
