@@ -1,11 +1,8 @@
+// const env = require('./dev')
+const env = require('./prod')
+
 module.exports = {
-  database: {
-    dbName: 'qike',
-    host: 'localhost',
-    port: '3306',
-    user: 'root',
-    password: 'zjb2019'
-  },
+  ...env,
   security: {
     secretKey: '123!@#qweQWE',
     expiresIn: 60 * 60 * 24 *7// 一个小时 * 24 * 7
