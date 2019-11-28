@@ -10,6 +10,9 @@ const router          = new Router({
   prefix: '/user'
 })
 
+router.get('/test', async (ctx, next) => {
+  ctx.body = 'test'
+})
 
 router.post('/login', async (ctx, next) => {
   // 获取参数
