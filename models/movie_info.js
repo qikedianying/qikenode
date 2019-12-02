@@ -30,7 +30,8 @@ class MovieInfo extends Model{
       })
     } else {
       return await MovieInfo.create({
-        content
+        content,
+        movie_id: id
       })
     }
   }
