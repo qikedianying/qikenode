@@ -10,6 +10,12 @@ class PerformerMovie extends Model{
       }
     })
   }
+  static async createData(data) {
+    for (let i = 0; i < data.length; i++) {
+      await PerformerMovie.create(data[i])
+    }
+    return
+  }
 }
 
 PerformerMovie.init({

@@ -12,10 +12,10 @@ const router = new Router({
 
 router.get('/zan', async (ctx, next) => {
 
-  const token = ctx.request.header.token
-  const movieId = ctx.request.query.movieId
+  const token     = ctx.request.header.token
+  const movieId   = ctx.request.query.movieId
   const articleId = ctx.request.query.articleId
-  const decoded = jwt.verify(token, global.config.security.secretKey)
+  const decoded   = jwt.verify(token, global.config.security.secretKey)
 
   const user = await User.getUser(decoded.openid)
   console.log(user)
@@ -35,6 +35,11 @@ router.get('/zan', async (ctx, next) => {
     await Article.createZan(articleId)
     throw new Success()
   }
+})
+router.post('/add', async (ctx, next) => {
+  const result = await Article.articleAdd(ctx.request.body)
+  console.log(result)
+  throw new Success(result)
 })
 
 module.exports = router

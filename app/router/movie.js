@@ -21,9 +21,10 @@ router.get('/popular', async (ctx, next) => {
 
 // todo 接口/list
 router.get('/list', async (ctx, next) => {
-  const list = await Movie.getList()
-  let result = list.map(item => item.dataValues)
-  throw new Success(result)
+  const pageNum = ctx.request.query.pageNum
+  const list = await Movie.getList(+pageNum)
+  console.log(pageNum)
+  throw new Success(list)
 })
 
 // todo 接口/detail
@@ -69,6 +70,21 @@ router.get('/detail', async (ctx, next) => {
     article: articleGroup
   }
   ctx.body = new Success(result)
+})
+
+// todo 接口/create
+router.post('/create', async (ctx, next) => {
+  console.log(ctx.request.body)
+  const result = await Movie.movieCreate(ctx.request.body)
+
+  throw new Success(result)
+})
+
+router.post('/content', async (ctx, next) => {
+  const content = await ctx.request.body.content
+  const movieId = await ctx.request.body.id
+  const result = await MovieInfo.createContent(content, movieId)
+  throw new Success('操作成功')
 })
 
 

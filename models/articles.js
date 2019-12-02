@@ -24,8 +24,18 @@ class Article extends Model{
         id
       }
     })
+  }
 
-
+  static async articleAdd(data) {
+    const {id, title, content, html, url} = data
+    return await Article.create({
+      zan_count: 0,
+      movie_id: id,
+      content,
+      title,
+      html,
+      url
+    })
   }
 }
 
@@ -39,7 +49,8 @@ Article.init({
   title:     Sequelize.STRING,
   content:   Sequelize.STRING,
   zan_count: Sequelize.INTEGER,
-  movie_id:  Sequelize.INTEGER
+  movie_id:  Sequelize.INTEGER,
+  html:      Sequelize.TEXT
 }, {
   sequelize: db,
   modelName: 'article'

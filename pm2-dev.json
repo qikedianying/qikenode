@@ -2,12 +2,13 @@
     "name": "qike",
     "script": "app.js",
     "watch": [
-        "controllers",
+        "app",
         "models",
         "app.js",
-        "router.js",
-        "config.js",
-        "Store.js"
+        "lib",
+        "core",
+        "config",
+        "middlewares"
     ],
     "env": {
         "NODE_ENV": "development"
