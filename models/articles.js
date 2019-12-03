@@ -28,8 +28,9 @@ class Article extends Model{
 
   static async articleAdd(data) {
     const {id, title, content, html, url} = data
+    const zan_count = parseInt(Math.random() * 200)
     return await Article.create({
-      zan_count: 0,
+      zan_count,
       movie_id: id,
       content,
       title,
