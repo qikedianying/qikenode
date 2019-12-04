@@ -1,6 +1,7 @@
 const cheerio = require('cheerio')
 const iconv   = require('iconv-lite')
 const https   = require('https')
+const axios   = require('axios')
 
 // const targetUrl = 'https://www.imooc.com/'
 const targetUrl = 'https://www.dytt8.net/index0.html'
@@ -38,10 +39,15 @@ const main = async () => {
   })
 }
 
+const mao = async () => {
+  const html = await axios.get('https://maoyan.com/query?kw=%E4%B8%AD%E5%9B%BD%E6%9C%BA%E9%95%BF')
+  console.log(html)
+}
+
 main()
 
 
-
+mao()
 
 
 
