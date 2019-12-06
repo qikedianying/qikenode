@@ -15,7 +15,11 @@ class Movie extends Model{
       where: { id }
     })
   }
-
+  static async getMovieByMovieId(id) {
+    return await Movie.findOne({
+      where: { movie_id: id }
+    })
+  }
   static async getList(pageNum) {
     const offset = ( pageNum -1 ) * 10
     return await Movie.findAndCountAll({
@@ -87,6 +91,24 @@ class Movie extends Model{
       }
     })
   }
+
+  static async movieCreateByCrawl (data) {
+    const item = await Movie.findOne({
+      where: {
+        movie_id: data.movie_id
+      }
+    })
+    if (!item) {
+      return await Movie.create(data)
+    }
+
+  }
+  static async movieUpdateByCrawl(data) {
+    console.log('data', data)
+    return await Movie.update(data, {
+      where: {movie_id: data.movie_id}
+    })
+  }
 }
 
 Movie.init({
@@ -95,19 +117,17 @@ Movie.init({
     primaryKey:    true,
     autoIncrement: true,
   },
-  // 1 最新电影宝宝有资源 2 正常电影 3 没有资源的电影
   type:         Sequelize.INTEGER,
   face:         Sequelize.STRING,
   name:         Sequelize.STRING,
   english_name: Sequelize.STRING,
-  mei_score:    Sequelize.FLOAT,
-  mao_score:    Sequelize.FLOAT,
+  score:        Sequelize.FLOAT,
   label:        Sequelize.STRING,
   address:      Sequelize.STRING,
   movie_length: Sequelize.STRING,
-  release_time: Sequelize.STRING,
-  release_country: Sequelize.STRING,
-  likes:        Sequelize.INTEGER
+  pub_desc:     Sequelize.STRING,
+  likes:        Sequelize.INTEGER,
+  movie_id:     Sequelize.INTEGER
 }, {
   sequelize: db,
   modelName: 'movie'

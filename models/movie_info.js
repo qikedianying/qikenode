@@ -3,9 +3,9 @@ const { db }             = require('../core/db')
 const {MovieType}        = require('../lib/enum')
 
 class MovieInfo extends Model{
+  // 使用中
   static async getMovieInfoById(movieId) {
     const movieInfo = await MovieInfo.findOne({
-      attributes: ['content', 'performer', 'comment', 'article', 'baidu_yun', 'extract_code'],
       where: {
         movie_id: movieId
       }
@@ -16,6 +16,12 @@ class MovieInfo extends Model{
     MovieInfo.create({
       content: 'test',
       movie_id: 2
+    })
+  }
+  static async getMovieInfoByMovieId(id) {
+    return await MovieInfo.findOne({
+      attributes: ['content', 'baidu_yun', 'extract_code', 'ftp_url'],
+      where: {movie_id: id}
     })
   }
   static async createContent(content, id) {
@@ -52,6 +58,17 @@ class MovieInfo extends Model{
       })
     }
   }
+
+  static async movieInfoUpdateByCrawl(data) {
+    let movieInfo = await MovieInfo.getMovieInfoById(data.movie_id)
+    if (movieInfo) {
+      return await MovieInfo.update(data, {
+        where: {movie_id: data.movie_id}
+      })
+    } else {
+      return await MovieInfo.create(data)
+    }
+  }
 }
 
 MovieInfo.init({
@@ -60,13 +77,11 @@ MovieInfo.init({
     primaryKey:    true,
     autoIncrement: true,
   },
-  content:      Sequelize.STRING, // 简介
-  performer:    Sequelize.STRING, // 演员
+  content:      Sequelize.TEXT, // 简介
   movie_id:     Sequelize.INTEGER, //电影id
-  comment:      Sequelize.STRING, // 评论
-  article:      Sequelize.STRING, // 文章
   baidu_yun:    Sequelize.STRING, // 百度云地址
-  extract_code: Sequelize.STRING // 百度云密码
+  extract_code: Sequelize.STRING, // 百度云密码
+  ftp_url:      Sequelize.STRING // ftp下载地址
 }, {
   sequelize: db,
   modelName: 'movie_info'

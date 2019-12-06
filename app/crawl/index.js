@@ -1,64 +1,91 @@
-const cheerio = require('cheerio')
-const iconv   = require('iconv-lite')
-const https   = require('https')
-const axios   = require('axios')
+const {YangGuang}  = require('./yangGuang')
+const {CrawlMovie} = require('../../models/crawl_movies')
+const {MaoYan}     = require('./maoyan')
+const {MovieInfo}  = require('../../models/movie_info')
+const {Movie}      = require('../../models/movie')
 
-// const targetUrl = 'https://www.imooc.com/'
-const targetUrl = 'https://www.dytt8.net/index0.html'
-const target = ['中国机长', '杀手']
+const yangGuang    = new YangGuang()
 
-const main = async () => {
-  https.get(targetUrl, (res) => {
-    let chunks = []
+const saveMovie = async () => {
+  try {
+    const movieNames = await yangGuang.getMovieName()
+    for (let i = 0; i < movieNames.length; i++) {
+      // 先获取 入过不存在 或者已查询过低分 直接下一个
+      let crawlMovie = await CrawlMovie.getMovieByUrl(movieNames[i].url)
+      if (crawlMovie) {
+        console.log(111, crawlMovie.dataValues)
+      } else {
+        console.log(1, crawlMovie)
+      }
 
-    res.on('data', function(chunk) {
-      chunks.push(chunk)
-    })
-
-    res.on('end', function(res) {
-      let html = iconv.decode(Buffer.concat(chunks),'gb2312')
-      let $ = cheerio.load(html)
-      let result = []
-      $('.co_content2').find('a').each((index, item) => {
-        const text = $(item).text()
-        console.log(text)
-        target.forEach(t => {
-          if (text.indexOf(t) !== -1) {
-
-            // result.push($(item).attr('href'))
-            result.push(text)
-          }
+      if (!crawlMovie) {
+        await CrawlMovie.createMovie({
+          crawl_url : movieNames[i].url,
         })
+      }
+      console.log(2);
+      if (crawlMovie && crawlMovie.dataValues.type) {
+        continue
+      }
 
+      // console.log(movieNames[i]);
+      const maoYan = new MaoYan(movieNames[i].name)
+      const data   = await maoYan.getMovies()
+      console.log(data)
+      if (!data) {
+        continue
+      }
+      crawlMovie   = await CrawlMovie.getMovieByName(data.name)
+
+      console.log(4, crawlMovie);
+      if (crawlMovie) {
+        continue
+      }
+
+      let type = 3
+      if ((data.sc - 0) > 8.5) {
+        type = 2
+        if (!data.id) {
+          continue
+        }
+        await Movie.movieCreateByCrawl({
+          type:  2,
+          likes: 0,
+          face:     data.img,
+          name:     data.name,
+          score:    data.sc,
+          pub_desc: data.pubDesc,
+          movie_id: data.id
+        })
+        console.log('--------------')
+        console.log(data.id)
+        console.log('==============')
+        await MaoYan.getDetail(data.id)
+        let ftp = await YangGuang.getFtpSrc(movieNames[i].url)
+        await MovieInfo.movieInfoUpdateByCrawl({
+          movie_id: data.id,
+          ftp_url:  ftp.ftp
+        })
+        await Movie.movieUpdateByCrawl({
+          face: ftp.face,
+          movie_id: data.id
+        })
+      }
+      await CrawlMovie.movieUpdate({
+        type,
+        crawl_url: movieNames[i].url,
+        name:     data.name,
+        score:    data.sc,
+        pubDesc:  data.pubDesc,
+        face:     data.img,
+        movie_id: data.id
       })
-      console.log(result)
-    })
-
-  }).on('error', function(err) {
-    console.log(err)
-  })
+    }
+  } catch (e) {
+    console.log(e)
+  }
 }
 
-const mao = async () => {
-  const html = await axios.get('https://maoyan.com/query?kw=%E4%B8%AD%E5%9B%BD%E6%9C%BA%E9%95%BF')
-  console.log(html)
+module.exports = {
+  saveMovie
 }
-
-main()
-
-
-mao()
-
-
-
-
-
-
-
-
-
-
-// 确定目标 要爬取哪个网站
-// 分析目标 url格式 数据格式 网页编码
-// 编写代码
-// 执行爬虫

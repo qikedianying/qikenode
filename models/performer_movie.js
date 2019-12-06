@@ -10,11 +10,28 @@ class PerformerMovie extends Model{
       }
     })
   }
+  static async getPerformerByMovieId(movieId) {
+   return await PerformerMovie.findAll({
+     attributes: ['name', 'avatar', 'play_row'],
+     where: {movie_id: movieId}
+   })
+  }
   static async createData(data) {
     for (let i = 0; i < data.length; i++) {
       await PerformerMovie.create(data[i])
     }
     return
+  }
+  static async createDataByCrawl(data) {
+    const item = await PerformerMovie.findOne({
+      where: {
+        avatar: data.avatar,
+        movie_id: data.movie_id
+      }
+    })
+    if (!item) {
+      return await PerformerMovie.create(data)
+    }
   }
 }
 
@@ -24,9 +41,10 @@ PerformerMovie.init({
     primaryKey: true,
     autoIncrement: true,
   },
-  movie_id:     Sequelize.INTEGER,
-  performer_id: Sequelize.INTEGER,
-  play_row:     Sequelize.STRING
+  name:     Sequelize.STRING,
+  movie_id: Sequelize.INTEGER,
+  avatar:   Sequelize.STRING,
+  play_row: Sequelize.STRING
 }, {
   sequelize: db,
   modelName: 'performer_movie'

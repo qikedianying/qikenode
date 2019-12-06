@@ -1,12 +1,19 @@
 const Router = require('koa-router')
 const requireDirectory = require('require-directory')
+const {saveMovie} = require('../app/crawl/index')
 
 class InitManager {
   static initCore (app) {
-    console.log(app)
     InitManager.app = app
     InitManager.initLoadRouters()
     InitManager.loadConfig()
+    saveMovie()
+    setInterval(() => {
+      let now = new Date()
+      if (now.getHours() < 8) {
+        saveMovie()
+      }
+    }, 1000 * 60 *60)
   }
 
   static initLoadRouters () {
