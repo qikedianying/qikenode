@@ -7,7 +7,7 @@ class InitManager {
     InitManager.app = app
     InitManager.initLoadRouters()
     InitManager.loadConfig()
-    saveMovie()
+    // saveMovie()
     setInterval(() => {
       let now = new Date()
       if (now.getHours() < 8) {
