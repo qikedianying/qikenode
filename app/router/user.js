@@ -24,10 +24,12 @@ router.post('/login', async (ctx, next) => {
   // 请求腾讯服务器
   const result        = await axios.get(`${wx.loginUrl}${code}`)
   const sessionKey    = result.data.session_key
-
+  console.log('sessionKey', sessionKey)
   // 获取解密数据
   const pc            = new WXBizDataCrypt(appid, sessionKey)
   const data          = pc.decryptData(encryptedData, iv)
+
+  console.log('data', data)
 
   // 获取用户详情
   const user          = await User.getUser(data.openId)
