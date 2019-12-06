@@ -13,7 +13,7 @@ class InitManager {
       if (now.getHours() < 8) {
         saveMovie()
       }
-    }, 1000 * 60 *60)
+    }, 1000 * 60 *60 * 7)
   }
 
   static initLoadRouters () {
